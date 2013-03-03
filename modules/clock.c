@@ -33,8 +33,14 @@ static void clock_event(enum sys_message msg)
 	     ((rtca_time.sec & 0x01) ? SEG_ON : SEG_OFF));
 #endif
 
-	if (msg & SYS_MSG_RTC_YEAR)
+#ifdef CONFIG_MOD_CLOCK_PRINT_SECOND
+        if (msg & SYS_MSG_RTC_SECOND)
+		_printf(1, LCD_SEG_L1_3_0, "%02u", rtca_time.sec);
+#else
+        if (msg & SYS_MSG_RTC_YEAR)
 		_printf(1, LCD_SEG_L1_3_0, "%04u", rtca_time.year);
+#endif
+
 #ifdef CONFIG_MOD_CLOCK_MONTH_FIRST
 	if (msg & SYS_MSG_RTC_MONTH)
 		_printf(0, LCD_SEG_L2_4_3, "%02u", rtca_time.mon);
