@@ -35,7 +35,7 @@ static void clock_event(enum sys_message msg)
 
 #ifdef CONFIG_MOD_CLOCK_PRINT_SECOND
         if (msg & SYS_MSG_RTC_SECOND)
-		_printf(1, LCD_SEG_L1_3_0, "%02u", rtca_time.sec);
+		_printf(1, LCD_SEG_L1_3_2, "%02u", rtca_time.sec);
 #else
         if (msg & SYS_MSG_RTC_YEAR)
 		_printf(1, LCD_SEG_L1_3_0, "%04u", rtca_time.year);
