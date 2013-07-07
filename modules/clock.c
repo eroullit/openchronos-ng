@@ -262,7 +262,7 @@ static void clock_activated()
 						| SYS_MSG_RTC_HOUR
 						| SYS_MSG_RTC_DAY
 						| SYS_MSG_RTC_MONTH
-#ifdef CONFIG_MOD_CLOCK_BLINKCOL
+#if defined(CONFIG_MOD_CLOCK_BLINKCOL) || defined (CONFIG_MOD_CLOCK_PRINT_SECOND)
 						| SYS_MSG_RTC_SECOND
 #endif
 	);
