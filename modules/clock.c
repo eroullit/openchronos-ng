@@ -33,13 +33,11 @@ static void clock_event(enum sys_message msg)
 	     ((rtca_time.sec & 0x01) ? SEG_ON : SEG_OFF));
 #endif
 
-#ifdef CONFIG_MOD_CLOCK_PRINT_SECOND
         if (msg & SYS_MSG_RTC_SECOND)
 		_printf(1, LCD_SEG_L1_3_2, "%02u", rtca_time.sec);
-#else
+
         if (msg & SYS_MSG_RTC_YEAR)
-		_printf(1, LCD_SEG_L1_3_0, "%04u", rtca_time.year);
-#endif
+		_printf(2, LCD_SEG_L1_3_0, "%04u", rtca_time.year);
 
 #ifdef CONFIG_MOD_CLOCK_MONTH_FIRST
 	if (msg & SYS_MSG_RTC_MONTH)
@@ -92,12 +90,12 @@ static inline void update_screen()
 /********************* edit mode callbacks ********************************/
 static void edit_yy_sel(void)
 {
-	lcd_screen_activate(1);
-	display_chars(1, LCD_SEG_L1_3_0, NULL, BLINK_ON);
+	lcd_screen_activate(2);
+	display_chars(2, LCD_SEG_L1_3_0, NULL, BLINK_ON);
 }
 static void edit_yy_dsel(void)
 {
-	display_chars(1, LCD_SEG_L1_3_0, NULL, BLINK_OFF);
+	display_chars(2, LCD_SEG_L1_3_0, NULL, BLINK_OFF);
 }
 static void edit_yy_set(int8_t step)
 {
@@ -105,7 +103,7 @@ static void edit_yy_set(int8_t step)
 	*((uint8_t *)&rtca_time.year + 1) = 0x07;
 	helpers_loop((uint8_t *)&rtca_time.year, 220, 230, step);
 
-	_printf(1, LCD_SEG_L1_3_0, "%04u", rtca_time.year);
+	_printf(2, LCD_SEG_L1_3_0, "%04u", rtca_time.year);
 }
 
 static void edit_mo_sel(void)
@@ -234,6 +232,8 @@ static void edit_save()
 	display_chars(0, LCD_SEG_L1_3_0, NULL, BLINK_OFF);
 	display_chars(0, LCD_SEG_L2_4_0, NULL, BLINK_OFF);
 	display_chars(1, LCD_SEG_L1_3_0, NULL, BLINK_OFF);
+	display_chars(2, LCD_SEG_L1_3_0, NULL, BLINK_OFF);
+	display_chars(2, LCD_SEG_L2_4_0, NULL, BLINK_OFF);
 
 	/* return to main screen */
 	lcd_screen_activate(0);
@@ -262,13 +262,11 @@ static void clock_activated()
 						| SYS_MSG_RTC_HOUR
 						| SYS_MSG_RTC_DAY
 						| SYS_MSG_RTC_MONTH
-#if defined(CONFIG_MOD_CLOCK_BLINKCOL) || defined (CONFIG_MOD_CLOCK_PRINT_SECOND)
 						| SYS_MSG_RTC_SECOND
-#endif
 	);
 
 	/* create two screens, the first is always the active one */
-	lcd_screens_create(2);
+	lcd_screens_create(3);
 
 	/* display stuff that won't change with time */
 	display_symbol(0, LCD_SEG_L1_COL, SEG_ON);
